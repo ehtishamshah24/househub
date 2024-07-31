@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 31, 2024 at 04:51 PM
+-- Generation Time: Aug 01, 2024 at 12:33 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -230,21 +230,23 @@ CREATE TABLE `reviews` (
 
 CREATE TABLE `users` (
   `UserID` int(11) NOT NULL,
-  `Name` varchar(255) NOT NULL,
+  `Name` varchar(255) DEFAULT NULL,
   `Email` varchar(255) NOT NULL,
   `Password` varchar(255) NOT NULL,
   `Phone` varchar(20) DEFAULT NULL,
   `ProfilePicture` varchar(255) DEFAULT NULL,
-  `CNICNumber` varchar(15) NOT NULL,
-  `DateOfBirth` date DEFAULT NULL,
-  `CNICExpiryDate` date DEFAULT NULL,
-  `CNICFrontPicture` varchar(255) DEFAULT NULL,
-  `CNICBackPicture` varchar(255) DEFAULT NULL,
   `DateJoined` timestamp NOT NULL DEFAULT current_timestamp(),
-  `ProvinceID` int(11) DEFAULT NULL,
   `CityID` int(11) DEFAULT NULL,
-  `ZipCode` varchar(20) DEFAULT NULL
+  `Address` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`UserID`, `Name`, `Email`, `Password`, `Phone`, `ProfilePicture`, `DateJoined`, `CityID`, `Address`) VALUES
+(2, NULL, 'ibtesam@gmail.com', '$2y$10$c6cgErULQk5zj/2Z7kpBF.w.x6Lm/IzocPYioQWPTljVIQVlHgFIq', NULL, NULL, '2024-07-31 17:12:20', NULL, NULL),
+(6, NULL, 'etisham@gmail.com', '$2y$10$xxj4yehpRFSEDrPPUtfS5uShJW4auLaSrp7HkgdNsG7O6L/ACpCFy', NULL, NULL, '2024-07-31 21:13:24', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -257,6 +259,13 @@ CREATE TABLE `userverification` (
   `UserID` int(11) DEFAULT NULL,
   `Status` varchar(50) DEFAULT 'Not Verified'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `userverification`
+--
+
+INSERT INTO `userverification` (`ID`, `UserID`, `Status`) VALUES
+(1, 6, 'Not Verified');
 
 --
 -- Indexes for dumped tables
@@ -353,8 +362,6 @@ ALTER TABLE `reviews`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserID`),
   ADD UNIQUE KEY `Email` (`Email`),
-  ADD UNIQUE KEY `CNICNumber` (`CNICNumber`),
-  ADD KEY `ProvinceID` (`ProvinceID`),
   ADD KEY `CityID` (`CityID`);
 
 --
@@ -438,23 +445,17 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `userverification`
 --
 ALTER TABLE `userverification`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `cities`
---
-ALTER TABLE `cities`
-  ADD CONSTRAINT `cities_ibfk_1` FOREIGN KEY (`ProvinceID`) REFERENCES `provinces` (`ProvinceID`);
 
 --
 -- Constraints for table `favorites`
@@ -516,7 +517,6 @@ ALTER TABLE `reviews`
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`ProvinceID`) REFERENCES `provinces` (`ProvinceID`),
   ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`CityID`) REFERENCES `cities` (`CityID`);
 
 --
