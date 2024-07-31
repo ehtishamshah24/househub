@@ -1,0 +1,137 @@
+CREATE DATABASE RentalServiceDB;
+
+USE RentalServiceDB;
+
+-- Users Table
+CREATE TABLE Users (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Phone VARCHAR(20),
+    Role ENUM('Renter', 'Owner', 'Agent', 'Admin') NOT NULL,
+    ProfilePicture VARCHAR(255),
+    DateJoined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Properties Table
+CREATE TABLE Properties (
+    PropertyID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Rent DECIMAL(10, 2) NOT NULL,
+    Address VARCHAR(255) NOT NULL,
+    City VARCHAR(100) NOT NULL,
+    State VARCHAR(100) NOT NULL,
+    ZipCode VARCHAR(20),
+    PropertyType ENUM('House', 'Apartment', 'Commercial') NOT NULL,
+    Status ENUM('Available', 'Rented') NOT NULL,
+    PostedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UserID INT,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Images Table
+CREATE TABLE Images (
+    ImageID INT AUTO_INCREMENT PRIMARY KEY,
+    PropertyID INT,
+    ImageURL VARCHAR(255) NOT NULL,
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
+);
+
+-- PropertyFeatures Table
+CREATE TABLE PropertyFeatures (
+    FeatureID INT AUTO_INCREMENT PRIMARY KEY,
+    PropertyID INT,
+    FeatureName VARCHAR(255) NOT NULL,
+    FeatureValue VARCHAR(255),
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
+);
+
+-- RentalAgreements Table
+CREATE TABLE RentalAgreements (
+    AgreementID INT AUTO_INCREMENT PRIMARY KEY,
+    PropertyID INT,
+    RenterID INT,
+    OwnerID INT,
+    AgreementDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    RentAmount DECIMAL(10, 2) NOT NULL,
+    DurationMonths INT NOT NULL,
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID),
+    FOREIGN KEY (RenterID) REFERENCES Users(UserID),
+    FOREIGN KEY (OwnerID) REFERENCES Users(UserID)
+);
+
+-- Messages Table
+CREATE TABLE Messages (
+    MessageID INT AUTO_INCREMENT PRIMARY KEY,
+    SenderID INT,
+    ReceiverID INT,
+    PropertyID INT,
+    MessageContent TEXT NOT NULL,
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (SenderID) REFERENCES Users(UserID),
+    FOREIGN KEY (ReceiverID) REFERENCES Users(UserID),
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
+);
+
+-- Favorites Table
+CREATE TABLE Favorites (
+    FavoriteID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    PropertyID INT,
+    AddedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
+);
+
+-- PropertyViews Table
+CREATE TABLE PropertyViews (
+    ViewID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    PropertyID INT,
+    ViewDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
+);
+
+-- Reviews Table
+CREATE TABLE Reviews (
+    ReviewID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    PropertyID INT,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    ReviewContent TEXT,
+    ReviewDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID)
+);
+
+-- Agents Table
+CREATE TABLE Agents (
+    AgentID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    AgencyName VARCHAR(255),
+    LicenseNumber VARCHAR(50),
+    ExperienceYears INT,
+    Bio TEXT,
+    ContactNumber VARCHAR(20),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Locations Table
+CREATE TABLE Locations (
+    LocationID INT AUTO_INCREMENT PRIMARY KEY,
+    Region VARCHAR(255) NOT NULL,
+    Area VARCHAR(255),
+    Neighborhood VARCHAR(255)
+);
+
+-- PropertyLocations Table
+CREATE TABLE PropertyLocations (
+    PropertyID INT,
+    LocationID INT,
+    FOREIGN KEY (PropertyID) REFERENCES Properties(PropertyID),
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID),
+    PRIMARY KEY (PropertyID, LocationID)
+);

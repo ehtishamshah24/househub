@@ -74,7 +74,7 @@ include("query.php");
                     </div>
                 <!-- <a href="" class="btn btn-primary px-3 d-none d-lg-flex">Add Property</a> -->
                     <a href="login.php" class="btn btn-primary px-3 d-none d-lg-flex">Login</a>
-                    <a href="signup.php" class="btn btn-primary px-3 d-none d-lg-flex">Signup</a>
+                    <a href="signup.php" class="btn btn-primary px-3 m d-none d-lg-flex">Signup</a>
                 </div>
             </nav>
         </div>

@@ -19,7 +19,7 @@
       </form>
       <div class="signup">
         <span>Don't have an account?
-          <a href="signup.html">Signup</a>
+          <a href="signup.php">Signup</a>
         </span>
       </div>
     </div>
