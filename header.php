@@ -89,7 +89,13 @@ include("query.php");
                             <i class="fa fa-user" style="font-size: 1.5em;"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="accountDropdown">
+                        <?php if(isset($_SESSION['userEmail'])){ ?>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                            <li><a class="dropdown-item" href="account.php?id=<?php echo $_SESSION['userId']?>">Account Setting</a></li>
+                            <?php } else{?>
                             <li><a class="dropdown-item" href="login.php">Login</a></li>
+                            <li><a class="dropdown-item" href="register.php">Register</a></li>
+                            <?php } ?>
                         </ul>
                     </div>
                 </div>

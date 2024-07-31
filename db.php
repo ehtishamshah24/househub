@@ -1,5 +1,5 @@
 <?php
-$server = "mysql:host=localhost;dbname=househub";
+$server = "mysql:host=localhost;dbname=rentalservicedb";
 $user = "root";
 $pass = "";
 $pdo = new PDO($server,$user , $pass);
