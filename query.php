@@ -30,7 +30,6 @@ if (isset($_POST['login'])) {
     }
 }
 
-// user register code ....
 if (isset($_POST['register'])) {
     $userEmail = $_POST['email'];
     $userPassword = $_POST['password'];
@@ -44,11 +43,20 @@ if (isset($_POST['register'])) {
     if ($checkQuery->rowCount() > 0) {
         echo "<script>alert('Email already registered.');</script>";
     } else {
-        // Insert user data into the database
-        $insertQuery = $pdo->prepare("INSERT INTO users (Email, Password) VALUES (?, ?)");
-        if ($insertQuery->execute([$userEmail, $hashedPassword])) {
-            echo "<script>alert('Registration successful! Please log in.');
-                            location.assign('login.php');</script>";
+        // Insert user data into the users table
+        $insertUserQuery = $pdo->prepare("INSERT INTO users (Email, Password) VALUES (?, ?)");
+        if ($insertUserQuery->execute([$userEmail, $hashedPassword])) {
+            // Get the last inserted ID (user ID)
+            $userId = $pdo->lastInsertId();
+
+            // Insert user ID into the verification table
+            $insertVerificationQuery = $pdo->prepare("INSERT INTO userverification (UserID) VALUES (?)");
+            if ($insertVerificationQuery->execute([$userId])) {
+                echo "<script>alert('Registration successful! Please log in.');
+                      location.assign('login.php');</script>";
+            } else {
+                echo "<script>alert('Error during registration. Please try again.');</script>";
+            }
         } else {
             echo "<script>alert('Error during registration. Please try again.');</script>";
         }
