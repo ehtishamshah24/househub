@@ -2,6 +2,36 @@
 include("dbcon.php");
 session_start();
 
+// login ...
+if (isset($_POST['signin'])) {
+    $loginEmail = $_POST['email'];
+    $loginPassword = $_POST['password'];
+
+    // Prepare and execute query to check if user exists
+    $query = $pdo->prepare("SELECT * FROM admin WHERE Email = :lEmail");
+    $query->bindParam(':lEmail', $loginEmail);
+    $query->execute();
+    $user = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        // Verify the password against the hashed password
+        if (password_verify($loginPassword, $user['Password'])) {
+            // Start session and set session variables
+            $_SESSION['adminId'] = $user['ID'];
+            $_SESSION['adminEmail'] = $user['Email'];
+            $_SESSION['adminName'] = $user['Username'];
+
+            echo "<script>alert('Login successful'); location.assign('index.php');</script>";
+        } else {
+            echo "<script>alert('Incorrect email or password'); location.assign('login.php');</script>";
+        }
+    } else {
+        echo "<script>alert('Incorrect email or password'); location.assign('login.php');</script>";
+    }
+}
+
+
+
 // add employee
 if(isset($_POST['registeremployee'])){
     // Check if the 'employeeimage' key exists in the $_FILES array

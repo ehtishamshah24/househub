@@ -1,28 +1,31 @@
 <?php
-include("query.php");
 include("header.php");
 
 // Fetch user information from the database
-$query = $pdo->prepare("SELECT * FROM users WHERE role_id = 1");
+$query = $pdo->prepare("SELECT * FROM admin");
 $query->execute();
 $user = $query->fetch(PDO::FETCH_ASSOC);
 
-if(isset($_POST['savechanges'])){
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+if (isset($_POST['savechanges'])) {
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  $password = $_POST['password'];
 
-    // Update query for users table
-    $updateUserQuery = $pdo->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE role_id = 1");
-    $updateUserQuery->bindParam(':name', $name);
-    $updateUserQuery->bindParam(':email', $email);
-    $updateUserQuery->bindParam(':password', $password);
+  // Hash the password before storing it
+  $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    if($updateUserQuery->execute()){
-        echo "<script>alert('admin information updated successfully');</script>";
-    } else {
-        echo "<script>alert('Error updating admin information');</script>";
-    }
+  // Update query for admin table
+  $updateAdminQuery = $pdo->prepare("UPDATE admin SET Username = :name, Email = :email, Password = :password WHERE ID = :adminId");
+  $updateAdminQuery->bindParam(':name', $name);
+  $updateAdminQuery->bindParam(':email', $email);
+  $updateAdminQuery->bindParam(':password', $hashedPassword);
+  $updateAdminQuery->bindParam(':adminId', $_SESSION['adminId']);
+
+  if ($updateAdminQuery->execute()) {
+      echo "<script>alert('Admin information updated successfully');</script>";
+  } else {
+      echo "<script>alert('Error updating admin information');</script>";
+  }
 }
 ?>
 
@@ -50,7 +53,7 @@ if(isset($_POST['savechanges'])){
                               type="text"
                               id="Name"
                               name="name"
-                              value="<?php echo $user['name'] ?>"
+                              value="<?php echo $user['Username'] ?>"
                               autofocus
                             />
                           </div>
@@ -62,7 +65,7 @@ if(isset($_POST['savechanges'])){
                               maxlength="20"
                               id="email"
                               name="email"
-                              value="<?php echo $user['email'] ?>"
+                              value="<?php echo $user['Email'] ?>"
                             />
                           </div>
                           <div class="mb-3 col-md-12">
@@ -74,7 +77,7 @@ if(isset($_POST['savechanges'])){
                               maxlength="12"
                               id="password"
                               name="password"
-                              value="<?php echo $user['password'] ?>"
+                              value="<?php echo $user['Password'] ?>"
                             />
                           </div>        
                         </div>

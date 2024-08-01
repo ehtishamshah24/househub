@@ -1,3 +1,10 @@
+<?php
+include("query.php");
+
+if(!isset($_SESSION['adminEmail'])){
+  echo "<script>location.assign('login.php')</script>";
+}
+?>
 <!DOCTYPE html>
 
 <!-- =========================================================
@@ -249,18 +256,18 @@
                 <div data-i18n="Authentications">Carousel</div>
               </a>
               <ul class="menu-sub">
-              <?php
-                  $query = $pdo->query("SELECT * FROM carousel");
-                  $carousel = $query->fetchAll(PDO::FETCH_ASSOC);
-                  if(count($carousel) < 3){             
-              ?>
+               <?php
+                 // $query = $pdo->query("SELECT * FROM carousel");
+                 // $carousel = $query->fetchAll(PDO::FETCH_ASSOC);
+                 // if(count($carousel) < 3){             
+              ?> 
                   <li class="menu-item">
                       <a href="add_Carousel.php" class="menu-link">
                           <div data-i18n="Basic">Add Carousel</div>
                       </a>
                   </li>
               <?php
-                  }
+                //  }
               ?>
                 <li class="menu-item">
                   <a href="view_Carousel.php" class="menu-link">
